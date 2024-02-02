@@ -31,4 +31,4 @@ jobs:
       # - name: Install dependencies
       #   run: go get .
       - name: Test with the Go CLI
-        run: go test $(go list ./... | grep -v /contracts)
+        run: export PATH=$PATH:$HOME/.config/.foundry/bin && go test $(go list ./... | grep -v /contracts)
