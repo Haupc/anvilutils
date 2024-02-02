@@ -16,7 +16,6 @@ jobs:
       GO111MODULE: on
     steps:
       - name: "Install foundry"
-        shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
           source ~/.bashrc;
