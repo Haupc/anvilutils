@@ -16,12 +16,9 @@ jobs:
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
+          echo 'export PATH=$PATH:$HOME/.config/.foundry/bin' >> ~/.bashrc
           source $HOME/.bashrc;
-          echo $PATH;
-          ls -lah $HOME/.config/.foundry/bin;
-          $HOME/.config/.foundry/bin/foundryup
-          ls -lah $HOME/.config/.foundry/bin;
-          echo anvil path: $(which anvil);
+          foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Run Gosec Security Scanner
