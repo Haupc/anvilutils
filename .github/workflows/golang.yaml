@@ -22,7 +22,7 @@ jobs:
       - name: "Install anvil"
         shell: bash
         run: |
-          chmod +x $HOME/.config/.foundry/bin;
+          chmod +x $HOME/.config/.foundry/bin/foundryup;
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
