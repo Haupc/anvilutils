@@ -1,4 +1,7 @@
-name: Run Gosec
+name: Golang CI
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
 on:
   push:
     branches:
@@ -13,16 +16,9 @@ jobs:
       GO111MODULE: on
     steps:
       - name: "Install foundry"
-        shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          source $HOME/.bashrc;
-          echo $PATH;
-          ls /home/runner/.config/.foundry/bin;
-      - name: "Install anvil"
-        shell: bash
-        run: |
-          chmod +x $HOME/.config/.foundry/bin;
+          source ~/.bashrc;
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
@@ -30,3 +26,11 @@ jobs:
         uses: securego/gosec@master
         with:
           args: '-exclude-dir=contracts ./...'
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.x'
+      # - name: Install dependencies
+      #   run: go get .
+      - name: Test with the Go CLI
+        run: go test $(go list ./... | grep -v /contracts)
