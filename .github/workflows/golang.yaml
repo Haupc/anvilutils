@@ -1,4 +1,4 @@
-name: Run Gosec
+name: Golang CI
 on:
   push:
     branches:
@@ -19,7 +19,8 @@ jobs:
           source $HOME/.bashrc;
           echo $PATH;
           ls -lah $HOME/.config/.foundry/bin;
-          $HOME/.config/.foundry/foundryup
+          echo $(which foundryup);
+          $HOME/.config/.foundry/bin/foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Run Gosec Security Scanner
