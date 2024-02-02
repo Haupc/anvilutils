@@ -52,6 +52,7 @@ func SetStorageAt(contractAddress common.Address, idx, data common.Hash) error {
 	return client.GlobalClient.RpcClient.Call(nil, "anvil_setStorageAt", contractAddress.Hex(), idx.Hex(), data.Hex())
 }
 
+// find slot index of balance of a specified account
 func FindErc20BalanceOfSlotIdx(contractAddress common.Address) (*big.Int, error) {
 	randomBalance := common.BytesToHash(maxUint128.Bytes())
 	for i := 0; i < 100; i++ {

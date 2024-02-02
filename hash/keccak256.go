@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
+// keccak256 hash data
 func Keccak256(input []byte) common.Hash {
 	hash := sha3.NewLegacyKeccak256()
 	hash.Write(input)
