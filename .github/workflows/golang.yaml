@@ -16,10 +16,11 @@ jobs:
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          echo $SHELL
+          echo $SHELL;
+          tail $HOME/.bashrc;
           source $HOME/.bashrc;
           echo path is $PATH;
-          echo foundryup path is $(which foundryup)
+          echo foundryup path is $(which foundryup);
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
