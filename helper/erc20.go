@@ -5,6 +5,8 @@ import (
 	"github.com/haupc/foundryutils/contracts"
 )
 
+// pack data for balanceOf method
+// solidity: balanceOf(address)
 func BalanceOfCallData(userAddress common.Address) []byte {
 	abi, _ := contracts.Erc20MetaData.GetAbi()
 	packedData, _ := abi.Pack("balanceOf", userAddress)
