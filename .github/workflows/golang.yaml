@@ -19,8 +19,8 @@ jobs:
           source $HOME/.bashrc;
           echo $PATH;
           ls -lah $HOME/.config/.foundry/bin;
-          echo foundryup path: $(which foundryup);
           $HOME/.config/.foundry/bin/foundryup
+          ls -lah $HOME/.config/.foundry/bin;
           echo anvil path: $(which anvil);
       - name: Checkout Source
         uses: actions/checkout@v3
