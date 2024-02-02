@@ -12,12 +12,18 @@ jobs:
     env:
       GO111MODULE: on
     steps:
-      - name: "Install anvil"
+      - name: "Install foundry"
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          source $HOME/.bashrc
-          foundryup;
+          source $HOME/.bashrc;
+          echo $PATH;
+          ls /home/runner/.config/.foundry/bin;
+      - name: "Install anvil"
+        shell: bash
+        run: |
+          chmod +x $HOME/.config/.foundry/bin;
+          foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Run Gosec Security Scanner
