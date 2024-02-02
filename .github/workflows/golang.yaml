@@ -12,11 +12,16 @@ jobs:
     env:
       GO111MODULE: on
     steps:
+      - name: "Test Echo"
+        shell: bash
+        run: |
+          echo abc >> $HOME/.bashrc
+          cat $HOME/.bashrc
       - name: "Install foundry"
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          echo 'export PATH=$PATH:$HOME/.config/.foundry/bin' >> ~/.bashrc
+          echo 'export PATH=$PATH:$HOME/.config/.foundry/bin' >> $HOME/.bashrc
           source $HOME/.bashrc;
           echo path is $PATH;
           echo foundryup path is $(which foundryup)
