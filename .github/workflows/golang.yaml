@@ -16,8 +16,7 @@ jobs:
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          echo 'export PATH=$PATH:$HOME/.config/.foundry/bin' >> $HOME/.bashrc;
-          cat $HOME/.bashrc;
+          echo $SHELL
           source $HOME/.bashrc;
           echo path is $PATH;
           echo foundryup path is $(which foundryup)
