@@ -7,11 +7,16 @@ on:
     branches:
       - master
 jobs:
-  tests:
+  go-ci:
     runs-on: ubuntu-latest
     env:
       GO111MODULE: on
     steps:
+      - name: "Install anvil"
+        shell: bash
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash; 
+          foundryup;
       - name: Checkout Source
         uses: actions/checkout@v3
       - name: Run Gosec Security Scanner
