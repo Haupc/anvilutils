@@ -16,8 +16,7 @@ jobs:
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          . ~/.bashrc;
-          # export PATH=$PATH:$HOME/.config/.foundry/bin;
+          export PATH=$PATH:$HOME/.config/.foundry/bin;
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
@@ -25,3 +24,11 @@ jobs:
         uses: securego/gosec@master
         with:
           args: '-exclude-dir=contracts ./...'
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        run: go get .
+      - name: Test with the Go CLI
+        run: go test $(go list ./... | grep -v /contracts)
