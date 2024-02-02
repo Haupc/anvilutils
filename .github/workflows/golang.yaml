@@ -1,4 +1,7 @@
 name: Golang CI
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
 on:
   push:
     branches:
@@ -16,7 +19,7 @@ jobs:
         shell: bash
         run: |
           curl -L https://foundry.paradigm.xyz | bash;
-          export PATH=$PATH:$HOME/.config/.foundry/bin;
+          source ~/.bashrc;
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
@@ -31,4 +34,4 @@ jobs:
       # - name: Install dependencies
       #   run: go get .
       - name: Test with the Go CLI
-        run: export PATH=$PATH:$HOME/.config/.foundry/bin && go test $(go list ./... | grep -v /contracts)
+        run: go test $(go list ./... | grep -v /contracts)
