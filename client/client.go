@@ -14,6 +14,8 @@ type Client struct {
 	GethClient *gethclient.Client
 }
 
+// init 3 types of client to
+// interact with rpc node endpoint
 func SetupClient(endpoint string) {
 	rpcClient, err := rpc.Dial(endpoint)
 	if err != nil {
