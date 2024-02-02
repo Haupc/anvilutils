@@ -21,3 +21,7 @@ func WriteErc20Balance(contract, user common.Address, amount *big.Int) error {
 func WriteNativeBalance(user common.Address, amount *big.Int) error {
 	return client.GlobalClient.RpcClient.Call(nil, "anvil_setBalance", user.Hex(), hexutil.Encode(amount.Bytes()))
 }
+
+func SetCode(account common.Address, code []byte) error {
+	return client.GlobalClient.RpcClient.Call(nil, "anvil_setCode", account.Hex(), hexutil.Encode(code))
+}

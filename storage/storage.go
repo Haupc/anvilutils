@@ -53,14 +53,13 @@ func SetStorageAt(contractAddress common.Address, idx, data common.Hash) error {
 }
 
 func FindErc20BalanceOfSlotIdx(contractAddress common.Address) (*big.Int, error) {
-	var randomAddress = common.HexToAddress("0xDeaDBeef") // 0x00000000000000000000000000000000DeaDBeef
 	randomBalance := common.BytesToHash(maxUint128.Bytes())
 	for i := 0; i < 100; i++ {
 		balanceOfSlotIdx := big.NewInt(int64(i))
-		accountBalanceSlotIdx := Erc20AccountBalanceSlotIdx(balanceOfSlotIdx, randomAddress)
+		accountBalanceSlotIdx := Erc20AccountBalanceSlotIdx(balanceOfSlotIdx, helper.DummyAccount)
 		b, err := client.GlobalClient.GethClient.CallContract(context.Background(), ethereum.CallMsg{
 			To:   &contractAddress,
-			Data: helper.BalanceOfCallData(randomAddress),
+			Data: helper.BalanceOfCallData(helper.DummyAccount),
 		}, nil, &map[common.Address]gethclient.OverrideAccount{
 			contractAddress: {
 				StateDiff: map[common.Hash]common.Hash{
