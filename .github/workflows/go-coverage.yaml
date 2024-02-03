@@ -1,4 +1,7 @@
 name: Go test coverage check
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
 on:
   push:
     branches:
@@ -16,6 +19,11 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '>=1.21'
+      - name: "Install foundry"
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash;
+          source ~/.bashrc;
+          foundryup
       - name: generate test coverage
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
