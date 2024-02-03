@@ -36,3 +36,9 @@ jobs:
           threshold-file: 75
           threshold-package: 80
           threshold-total: 90
+          ## when token is not specified (value '') this feature is turend off
+          ## in this example badge is created and committed only for main brach
+          git-token: ${{ github.ref_name == 'master' && secrets.GH_TOKEN || '' }}
+          ## name of branch where badges are stored
+          ## ideally this should be orphan branch (see below how to create this branch)
+          git-branch: badges 
