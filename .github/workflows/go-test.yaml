@@ -1,7 +1,7 @@
-name: Golang CI
+name: go test
 defaults:
   run:
-    shell: bash -ieo pipefail {0}
+    shell: bash -leo pipefail {0}
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ on:
     branches:
       - master
 jobs:
-  go-ci:
+  go-test-ci:
     runs-on: ubuntu-latest
     env:
       GO111MODULE: on
@@ -22,15 +22,9 @@ jobs:
           foundryup
       - name: Checkout Source
         uses: actions/checkout@v3
-      - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
-        with:
-          args: '-exclude-dir=contracts ./...'
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.x'
-      # - name: Install dependencies
-      #   run: go get .
       - name: Test with the Go CLI
         run: go test $(go list ./... | grep -v /contracts)
