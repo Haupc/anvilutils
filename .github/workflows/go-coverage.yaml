@@ -30,6 +30,12 @@ jobs:
       - name: check test coverage
         uses: vladopajic/go-test-coverage@v2
         with:
+          config: |
+            exclude:
+            # Exclude files or packages matching their paths
+            paths:
+              - \.pb\.go$    # excludes all protobuf generated files
+              - ^contracts     # exclude package `contracts`
           profile: cover.out
           local-prefix: github.com/org/project
           threshold-file: 75
