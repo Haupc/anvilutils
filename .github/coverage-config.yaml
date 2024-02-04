@@ -1,0 +1,5 @@
+exclude:
+  # Exclude files or packages matching their paths
+  paths:
+    - \.pb\.go$    # excludes all protobuf generated files
+    - ^contracts     # exclude package `contracts`

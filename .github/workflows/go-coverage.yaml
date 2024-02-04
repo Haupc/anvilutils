@@ -1,0 +1,44 @@
+name: Go test coverage check
+defaults:
+  run:
+    shell: bash -ieo pipefail {0}
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  go-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '>=1.21'
+      - name: "Install foundry"
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash;
+          source ~/.bashrc;
+          foundryup
+      - name: generate test coverage
+        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+
+      - name: check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: .github/coverage-config.yaml
+          profile: cover.out
+          # local-prefix: github.com/org/project
+          threshold-file: 75
+          threshold-package: 80
+          threshold-total: 90
+          ## when token is not specified (value '') this feature is turend off
+          ## in this example badge is created and committed only for main brach
+          git-token: ${{ github.ref_name == 'master' && secrets.GITHUB_TOKEN || '' }}
+          ## name of branch where badges are stored
+          ## ideally this should be orphan branch (see below how to create this branch)
+          git-branch: badges 
