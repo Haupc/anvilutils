@@ -32,7 +32,7 @@ jobs:
         with:
           config: .github/coverage-config.yaml
           profile: cover.out
-          local-prefix: github.com/org/project
+          # local-prefix: github.com/org/project
           threshold-file: 75
           threshold-package: 80
           threshold-total: 90
