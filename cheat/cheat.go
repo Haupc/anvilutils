@@ -28,3 +28,14 @@ func WriteNativeBalance(user common.Address, amount *big.Int) error {
 func SetCode(account common.Address, code []byte) error {
 	return client.GlobalClient.RpcClient.Call(nil, "anvil_setCode", account.Hex(), hexutil.Encode(code))
 }
+
+// after this call, all transactions from specified account
+// can be executed without signing
+func StartImpersonateAccount(account common.Address) error {
+	return client.GlobalClient.RpcClient.Call(nil, "anvil_impersonateAccount", account.Hex())
+}
+
+// stop impersonating account
+func StopImpersonateAccount(account common.Address) error {
+	return client.GlobalClient.RpcClient.Call(nil, "anvil_stopImpersonatingAccount", account.Hex())
+}

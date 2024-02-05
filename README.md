@@ -9,7 +9,22 @@
 - [x] Write native balance
 - [ ] Write Erc20 approval
 - [x] Set code for address
-- [ ] Start prank an address
-- [ ] Stop prank an address
-- [ ] Prank and make only 1 txn
+- [x] Start impersonate an address
+- [x] Stop impersonate an address
+- [ ] Impersonate and make only 1 txn
 - [ ] Write Erc721 balance
+
+## How to Use:
+```
+    forkRpcEndpoint, err := foundryutils.StartFork("https://rpc.ankr.com/eth", nil)
+    if err != nil {
+        // do something with err
+    }
+    client.SetupClient(forkRpcEndpoint)
+    cheat.WriteErc20Balance(helper.DummyContract, helper.DummyAccount, big.NewInt(1234567890123))
+    
+    // call api, do everything for testing
+    // do something with onchain data using client.GlobalClient
+    // to sop fork
+    foundryutils.StopFork()
+```
