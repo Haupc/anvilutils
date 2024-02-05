@@ -12,37 +12,39 @@ var (
 	mu          sync.Mutex
 )
 
+type ForkOpts struct {
+	Port        string
+	BlockNumber *big.Int
+}
+
 // start fork a network for testing purposes
-func StartFork(forkUrl string, port string, blockNumber *big.Int) (string, error) {
+func StartFork(forkUrl string, opt ForkOpts) (string, error) {
 	_, err := exec.LookPath("anvil")
 	if err != nil {
 		return "", err
 	}
-	if port == "" {
-		port = "8545"
-	}
-	mu.Lock()
 	if forkProcess != nil {
-		forkProcess.Process.Kill()
-		if err := forkProcess.Wait(); err != nil {
-			return "", fmt.Errorf("stop old fork process failed: %v", err.Error())
-		}
+		return "", fmt.Errorf("fork process already exists")
+	}
+	if opt.Port == "" {
+		opt.Port = "8545"
 	}
 	args := []string{
 		"--fork-url", forkUrl,
-		"--port", port,
+		"--port", opt.Port,
 	}
-	if blockNumber != nil {
+	if opt.BlockNumber != nil {
 		args = append(args, []string{
-			"--fork-block-number", blockNumber.String(),
+			"--fork-block-number", opt.BlockNumber.String(),
 		}...)
 	}
-	forkProcess = exec.Command("anvil", args...)
+	mu.Lock()
+	forkProcess = exec.Command("anvil", args...) // #nosec
 	defer mu.Unlock()
 	if err := forkProcess.Start(); err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("http://localhost:%s", port), nil
+	return fmt.Sprintf("http://localhost:%s", opt.Port), nil
 }
 
 // stop current fork process
@@ -50,7 +52,9 @@ func StopFork() error {
 	mu.Lock()
 	defer mu.Unlock()
 	if forkProcess != nil {
-		forkProcess.Process.Kill()
+		if err := forkProcess.Process.Kill(); err != nil {
+			return fmt.Errorf("kill old fork process failed: %v", err.Error())
+		}
 		if err := forkProcess.Wait(); err != nil {
 			return fmt.Errorf("stop old fork process failed: %v", err.Error())
 		}
