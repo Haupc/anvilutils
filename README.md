@@ -15,7 +15,7 @@
 - [ ] Write Erc721 balance
 
 ## How to Use:
-```
+```go
     forkRpcEndpoint, err := foundryutils.StartFork("https://rpc.ankr.com/eth", nil)
     if err != nil {
         // do something with err
