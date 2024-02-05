@@ -2,6 +2,7 @@ package cheat
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"math/big"
 	"os/exec"
@@ -9,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/haupc/foundryutils/client"
 	"github.com/haupc/foundryutils/helper"
@@ -64,6 +66,34 @@ func (s *CheatSuite) TestWriteErc20Balance() {
 	s.Assert().Equal("1234567890123", new(big.Int).SetBytes(balance).String())
 }
 
+func (s *CheatSuite) TestStartImpersonateAccount() {
+	WriteNativeBalance(helper.DummyAccount, big.NewInt(1234567890987654321))
+	s.Assert().NoError(
+		StartImpersonateAccount(helper.DummyAccount),
+	)
+	// tx := types.NewTx(0, common.HexToAddress("0x08081999"), big.NewInt(1000000000000000000), 21000, big.NewInt(30000000000), nil)
+	s.Assert().NoError(
+		client.GlobalClient.RpcClient.Call(nil, "eth_sendTransaction",
+			struct {
+				From     string `json:"from"`
+				To       string `json:"to"`
+				Value    string `json:"value"`
+				Gas      string `json:"gas"`
+				GasPrice string `json:"gasPrice"`
+			}{
+				From:     helper.DummyAccount.Hex(),
+				To:       common.HexToAddress("0x08081999").Hex(),
+				Value:    hexutil.Encode(big.NewInt(1000000000000000000).Bytes()),
+				Gas:      fmt.Sprintf("0x%x", 21000),
+				GasPrice: hexutil.Encode(big.NewInt(10000000000000).Bytes()),
+			},
+		),
+	)
+	b, err := client.GlobalClient.EthClient.BalanceAt(context.Background(), common.HexToAddress("0x08081999"), nil)
+	s.Assert().NoError(err)
+	s.Assert().Equal(hexutil.Encode(big.NewInt(1000000000000000000).Bytes()), hexutil.Encode(b.Bytes()))
+}
+
 func waitForAnvilReady(out io.ReadCloser) error {
 	readyString := "Listening on 127.0.0.1:8545"
 	for {
@@ -77,6 +107,6 @@ func waitForAnvilReady(out io.ReadCloser) error {
 	}
 }
 
-func TestStorageSuite(t *testing.T) {
+func TestCheatSuite(t *testing.T) {
 	suite.Run(t, new(CheatSuite))
 }
