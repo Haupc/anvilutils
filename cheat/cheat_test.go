@@ -2,7 +2,6 @@ package cheat
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"math/big"
 	"os/exec"
@@ -71,23 +70,8 @@ func (s *CheatSuite) TestStartImpersonateAccount() {
 	s.Assert().NoError(
 		StartImpersonateAccount(helper.DummyAccount),
 	)
-	// tx := types.NewTx(0, common.HexToAddress("0x08081999"), big.NewInt(1000000000000000000), 21000, big.NewInt(30000000000), nil)
 	s.Assert().NoError(
-		client.GlobalClient.RpcClient.Call(nil, "eth_sendTransaction",
-			struct {
-				From     string `json:"from"`
-				To       string `json:"to"`
-				Value    string `json:"value"`
-				Gas      string `json:"gas"`
-				GasPrice string `json:"gasPrice"`
-			}{
-				From:     helper.DummyAccount.Hex(),
-				To:       common.HexToAddress("0x08081999").Hex(),
-				Value:    hexutil.Encode(big.NewInt(1000000000000000000).Bytes()),
-				Gas:      fmt.Sprintf("0x%x", 21000),
-				GasPrice: hexutil.Encode(big.NewInt(10000000000000).Bytes()),
-			},
-		),
+		SendImpersonateTxn(helper.DummyAccount, common.HexToAddress("0x08081999"), 21000, big.NewInt(1000000000000000000), big.NewInt(10000000000000), nil),
 	)
 	b, err := client.GlobalClient.EthClient.BalanceAt(context.Background(), common.HexToAddress("0x08081999"), nil)
 	s.Assert().NoError(err)

@@ -1,6 +1,7 @@
 package cheat
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -38,4 +39,23 @@ func StartImpersonateAccount(account common.Address) error {
 // stop impersonating account
 func StopImpersonateAccount(account common.Address) error {
 	return client.GlobalClient.RpcClient.Call(nil, "anvil_stopImpersonatingAccount", account.Hex())
+}
+
+// make an impersonate txn
+func SendImpersonateTxn(from, to common.Address, gas uint64, value, gasPrice *big.Int, data []byte) error {
+	return client.GlobalClient.RpcClient.Call(nil, "eth_sendTransaction",
+		struct {
+			From     string `json:"from"`
+			To       string `json:"to"`
+			Value    string `json:"value"`
+			Gas      string `json:"gas"`
+			GasPrice string `json:"gasPrice"`
+		}{
+			From:     from.Hex(),
+			To:       to.Hex(),
+			Value:    hexutil.Encode(value.Bytes()),
+			Gas:      fmt.Sprintf("0x%x", gas),
+			GasPrice: hexutil.Encode(gasPrice.Bytes()),
+		},
+	)
 }

@@ -11,12 +11,15 @@
 - [x] Set code for address
 - [x] Start impersonate an address
 - [x] Stop impersonate an address
+- [x] Impersonate a txn(require impersonate account)
 - [ ] Impersonate and make only 1 txn
 - [ ] Write Erc721 balance
 
 ## How to Use:
 ```go
-    forkRpcEndpoint, err := foundryutils.StartFork("https://rpc.ankr.com/eth", nil)
+    // if you want to fork on test code, you can use `StartFork` function
+    // otherwise, you can run anvil separately then call `SetupClient`
+    forkRpcEndpoint, err := foundryutils.StartFork("https://rpc.ankr.com/eth", foundryutils.ForkOpts{})
     if err != nil {
         // do something with err
     }
