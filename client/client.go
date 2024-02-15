@@ -6,8 +6,6 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
-var GlobalClient *Client
-
 type Client struct {
 	RpcClient  *rpc.Client
 	EthClient  *ethclient.Client
@@ -16,14 +14,14 @@ type Client struct {
 
 // init 3 types of client to
 // interact with rpc node endpoint
-func SetupClient(endpoint string) {
+func NewClient(endpoint string) *Client {
 	rpcClient, err := rpc.Dial(endpoint)
 	if err != nil {
 		panic(err)
 	}
 	ethClient := ethclient.NewClient(rpcClient)
 	gethClient := gethclient.New(rpcClient)
-	GlobalClient = &Client{
+	return &Client{
 		RpcClient:  rpcClient,
 		EthClient:  ethClient,
 		GethClient: gethClient,
