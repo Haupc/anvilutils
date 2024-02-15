@@ -7,12 +7,12 @@
 
 - [x] Write Erc20 balance
 - [x] Write native balance
-- [ ] Write Erc20 approval
+- [x] Set Erc20 approval
 - [x] Set code for address
 - [x] Start impersonate an address
 - [x] Stop impersonate an address
 - [x] Impersonate a txn(require impersonate account)
-- [ ] Impersonate and make only 1 txn
+- [x] Impersonate and make only 1 txn
 - [ ] Write Erc721 balance
 
 ## How to Use:

@@ -1,12 +1,15 @@
 package foundryutils
 
 import (
+	"context"
 	"fmt"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/haupc/foundryutils/client"
+	"github.com/haupc/foundryutils/helper"
 	"github.com/haupc/foundryutils/storage"
 )
 
@@ -50,20 +53,60 @@ func (c *Cheat) StopImpersonateAccount(account common.Address) error {
 }
 
 // make an impersonate txn
-func (c *Cheat) SendImpersonateTxn(from, to common.Address, gas uint64, value, gasPrice *big.Int, data []byte) error {
-	return c.client.RpcClient.Call(nil, "eth_sendTransaction",
+func (c *Cheat) SendImpersonateTxn(from, to common.Address, value *big.Int, data []byte, gas uint64, gasPrice *big.Int) (txHash common.Hash, err error) {
+	if value == nil {
+		value = big.NewInt(0)
+	}
+	if gas == 0 {
+		gas, err = c.client.EthClient.EstimateGas(context.Background(), ethereum.CallMsg{
+			From:  from,
+			To:    &to,
+			Value: value,
+			Data:  data,
+		})
+		if err != nil {
+			return
+		}
+	}
+	if gasPrice == nil || gasPrice.Cmp(big.NewInt(0)) == 0 {
+		gasPrice, err = c.client.EthClient.SuggestGasPrice(context.Background())
+		if err != nil {
+			return
+		}
+	}
+
+	err = c.client.RpcClient.Call(&txHash, "eth_sendTransaction",
 		struct {
 			From     string `json:"from"`
 			To       string `json:"to"`
 			Value    string `json:"value"`
 			Gas      string `json:"gas"`
 			GasPrice string `json:"gasPrice"`
+			Data     string `json:"data"`
 		}{
 			From:     from.Hex(),
 			To:       to.Hex(),
-			Value:    hexutil.Encode(value.Bytes()),
+			Value:    fmt.Sprintf("0x%s", value.Text(16)),
 			Gas:      fmt.Sprintf("0x%x", gas),
 			GasPrice: hexutil.Encode(gasPrice.Bytes()),
+			Data:     hexutil.Encode(data),
 		},
 	)
+	return
+}
+
+func (c *Cheat) ImpersonateAccountAndSendTransaction(from, to common.Address, value *big.Int, data []byte, gas uint64, gasPrice *big.Int) (txHash common.Hash, err error) {
+	if err = c.StartImpersonateAccount(from); err != nil {
+		return
+	}
+	defer c.StopImpersonateAccount(from)
+	return c.SendImpersonateTxn(from, to, value, data, gas, gasPrice)
+}
+
+func (c *Cheat) SetApprovalErc20(owner, token, spender common.Address, amount *big.Int) error {
+	callData := helper.Erc20ApproveCallData(spender, amount)
+	if _, err := c.ImpersonateAccountAndSendTransaction(owner, token, nil, callData, 0, nil); err != nil {
+		return err
+	}
+	return nil
 }

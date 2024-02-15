@@ -15,10 +15,6 @@ import (
 	"github.com/haupc/foundryutils/helper"
 )
 
-var (
-	maxUint128, _ = new(big.Int).SetString("ffffffffffffffffffffffffffffffff", 16)
-)
-
 // Get slot for account balance
 // when know slot index of the
 // `balanceOf` map (map address => uint256)
@@ -54,13 +50,13 @@ func SetStorageAt(client *client.Client, contractAddress common.Address, idx, da
 
 // find slot index of balance of a specified account
 func FindErc20BalanceOfSlotIdx(client *client.Client, contractAddress common.Address) (*big.Int, error) {
-	randomBalance := common.BytesToHash(maxUint128.Bytes())
+	randomBalance := common.BytesToHash(helper.MaxUint128.Bytes())
 	for i := 0; i < 100; i++ {
 		balanceOfSlotIdx := big.NewInt(int64(i))
 		accountBalanceSlotIdx := Erc20AccountBalanceSlotIdx(client, balanceOfSlotIdx, helper.DummyAccount)
 		b, err := client.GethClient.CallContract(context.Background(), ethereum.CallMsg{
 			To:   &contractAddress,
-			Data: helper.BalanceOfCallData(helper.DummyAccount),
+			Data: helper.Erc20BalanceOfCallData(helper.DummyAccount),
 		}, nil, &map[common.Address]gethclient.OverrideAccount{
 			contractAddress: {
 				StateDiff: map[common.Hash]common.Hash{

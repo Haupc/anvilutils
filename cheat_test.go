@@ -12,6 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/haupc/foundryutils/client"
+	"github.com/haupc/foundryutils/contracts"
 	"github.com/haupc/foundryutils/helper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -39,7 +40,7 @@ func (s *CheatSuite) TestWriteErc20Balance() {
 	s.Assert().NoError(s.cheat.WriteErc20Balance(helper.DummyContract, helper.DummyAccount, big.NewInt(1234567890123)))
 	balance, err := s.cheat.client.EthClient.CallContract(context.Background(), ethereum.CallMsg{
 		To:   &helper.DummyContract,
-		Data: helper.BalanceOfCallData(helper.DummyAccount),
+		Data: helper.Erc20BalanceOfCallData(helper.DummyAccount),
 	}, nil)
 	s.Assert().NoError(err)
 	s.Assert().Equal("1234567890123", new(big.Int).SetBytes(balance).String())
@@ -50,12 +51,22 @@ func (s *CheatSuite) TestStartImpersonateAccount() {
 	s.Assert().NoError(
 		s.cheat.StartImpersonateAccount(helper.DummyAccount),
 	)
-	s.Assert().NoError(
-		s.cheat.SendImpersonateTxn(helper.DummyAccount, common.HexToAddress("0x08081999"), 21000, big.NewInt(1000000000000000000), big.NewInt(10000000000000), nil),
-	)
+	txHash, err := s.cheat.SendImpersonateTxn(helper.DummyAccount, common.HexToAddress("0x08081999"), big.NewInt(1000000000000000000), nil, 0, nil)
+	s.Assert().NoError(err)
+	s.Assert().NotEqual(txHash, common.Hash{})
 	b, err := s.cheat.client.EthClient.BalanceAt(context.Background(), common.HexToAddress("0x08081999"), nil)
 	s.Assert().NoError(err)
 	s.Assert().Equal(hexutil.Encode(big.NewInt(1000000000000000000).Bytes()), hexutil.Encode(b.Bytes()))
+}
+
+func (s *CheatSuite) TestSetApprovalErc20() {
+	s.cheat.WriteNativeBalance(helper.DummyAccount, big.NewInt(1234567890987654321))
+	spender := common.HexToAddress("0xdeaddead")
+	s.Assert().NoError(s.cheat.SetApprovalErc20(helper.DummyAccount, helper.DummyContract, spender, helper.MaxUint128))
+	erc20Contract, _ := contracts.NewErc20(helper.DummyContract, s.cheat.client.EthClient)
+	allowance, err := erc20Contract.Allowance(nil, helper.DummyAccount, spender)
+	s.Assert().NoError(err)
+	s.Assert().Equal(helper.MaxUint128.String(), allowance.String())
 }
 
 func TestCheatSuite(t *testing.T) {
