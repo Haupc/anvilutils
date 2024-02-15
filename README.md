@@ -17,17 +17,24 @@
 
 ## How to Use:
 ```go
-    // if you want to fork on test code, you can use `StartFork` function
-    // otherwise, you can run anvil separately then call `SetupClient`
-    forkRpcEndpoint, err := foundryutils.StartFork("https://rpc.ankr.com/eth", foundryutils.ForkOpts{})
+    // if you want to fork on test code, you can use fork command
+    // otherwise, you can run anvil separately then call setup cheats
+    forkCmd, err := foundryutils.NewForkCommand(ForkOpts{})
     if err != nil {
         // do something with err
     }
-    client.SetupClient(forkRpcEndpoint)
+    forkUrl, err := forkCmd.Start()
+    if err != nil {
+        // do something with err
+    }
+
+    // setup client for anvil node
+    client := client.NewClient(forkUrl)
+    cheat := foundryutils.NewCheat(client)
     cheat.WriteErc20Balance(helper.DummyContract, helper.DummyAccount, big.NewInt(1234567890123))
     
     // call api, do everything for testing
     // do something with onchain data using client.GlobalClient
     // to sop fork
-    foundryutils.StopFork()
+    forkCmd.Stop()
 ```

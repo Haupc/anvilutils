@@ -22,7 +22,7 @@ var (
 // Get slot for account balance
 // when know slot index of the
 // `balanceOf` map (map address => uint256)
-func Erc20AccountBalanceSlotIdx(balanceOfSlotIdx *big.Int, addr common.Address) common.Hash {
+func Erc20AccountBalanceSlotIdx(client *client.Client, balanceOfSlotIdx *big.Int, addr common.Address) common.Hash {
 	// https://dev.kit.eco/ethereum-simple-deep-dive-into-evm-storage
 	mappingTyp, _ := abi.NewType("tuple", "mappings", []abi.ArgumentMarshaling{
 		{
@@ -48,17 +48,17 @@ func Erc20AccountBalanceSlotIdx(balanceOfSlotIdx *big.Int, addr common.Address) 
 }
 
 // Set storage slot at slot index
-func SetStorageAt(contractAddress common.Address, idx, data common.Hash) error {
-	return client.GlobalClient.RpcClient.Call(nil, "anvil_setStorageAt", contractAddress.Hex(), idx.Hex(), data.Hex())
+func SetStorageAt(client *client.Client, contractAddress common.Address, idx, data common.Hash) error {
+	return client.RpcClient.Call(nil, "anvil_setStorageAt", contractAddress.Hex(), idx.Hex(), data.Hex())
 }
 
 // find slot index of balance of a specified account
-func FindErc20BalanceOfSlotIdx(contractAddress common.Address) (*big.Int, error) {
+func FindErc20BalanceOfSlotIdx(client *client.Client, contractAddress common.Address) (*big.Int, error) {
 	randomBalance := common.BytesToHash(maxUint128.Bytes())
 	for i := 0; i < 100; i++ {
 		balanceOfSlotIdx := big.NewInt(int64(i))
-		accountBalanceSlotIdx := Erc20AccountBalanceSlotIdx(balanceOfSlotIdx, helper.DummyAccount)
-		b, err := client.GlobalClient.GethClient.CallContract(context.Background(), ethereum.CallMsg{
+		accountBalanceSlotIdx := Erc20AccountBalanceSlotIdx(client, balanceOfSlotIdx, helper.DummyAccount)
+		b, err := client.GethClient.CallContract(context.Background(), ethereum.CallMsg{
 			To:   &contractAddress,
 			Data: helper.BalanceOfCallData(helper.DummyAccount),
 		}, nil, &map[common.Address]gethclient.OverrideAccount{

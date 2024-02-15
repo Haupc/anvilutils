@@ -7,14 +7,15 @@ import (
 )
 
 func TestSetupClient_Success(t *testing.T) {
+	var client *Client
 	assert.NotPanics(t, func() {
-		SetupClient("http://localhost:8545")
+		client = NewClient("http://localhost:8545")
 	})
-	assert.NotNil(t, GlobalClient)
+	assert.NotNil(t, client)
 }
 
 func TestSetupClient_Panic(t *testing.T) {
 	assert.Panics(t, func() {
-		SetupClient("")
+		_ = NewClient("")
 	})
 }
