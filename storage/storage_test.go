@@ -22,7 +22,7 @@ type StorageSuite struct {
 }
 
 func (s *StorageSuite) TestFindErc20BalanceOfSlotIdx() {
-	slotIdx, err := FindErc20BalanceOfSlotIdx(s.client, helper.DummyContract)
+	slotIdx, err := FindErc20BalanceOfSlotIdx(s.client, helper.DummyErc20Contract)
 	s.Assert().NoError(err)
 	s.Assert().NotNil(slotIdx)
 	s.Assert().Equal(int64(3), slotIdx.Int64())
@@ -42,9 +42,9 @@ func (s *StorageSuite) TestFindErc20BalanceOfSlotIdx_Err() {
 }
 
 func (s *StorageSuite) TestSetStorageAt() {
-	err := SetStorageAt(s.client, helper.DummyContract, common.HexToHash("0x1"), helper.DummyHash)
+	err := SetStorageAt(s.client, helper.DummyErc20Contract, common.HexToHash("0x1"), helper.DummyHash)
 	s.Assert().NoError(err)
-	b, err := s.client.EthClient.StorageAt(context.Background(), helper.DummyContract, common.HexToHash("0x1"), nil)
+	b, err := s.client.EthClient.StorageAt(context.Background(), helper.DummyErc20Contract, common.HexToHash("0x1"), nil)
 	s.Assert().NoError(err)
 	s.Assert().Equal(helper.DummyHash, common.BytesToHash(b))
 }
@@ -56,7 +56,7 @@ func TestStorageSuite(t *testing.T) {
 	assert.NoError(t, err)
 	defer cmd.Process.Kill()
 	client := client.NewClient(endpoint)
-	err = client.RpcClient.Call(nil, "anvil_setCode", helper.DummyContract, hexutil.Encode(helper.WETH_Code))
+	err = client.RpcClient.Call(nil, "anvil_setCode", helper.DummyErc20Contract, hexutil.Encode(helper.WETH_Code))
 	assert.NoError(t, err)
 
 	storageSuite.client = client
