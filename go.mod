@@ -1,4 +1,4 @@
-module github.com/haupc/foundryutils
+module github.com/haupc/anvilutils
 
 go 1.21.1
 

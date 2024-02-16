@@ -1,4 +1,4 @@
-package foundryutils
+package anvilutils
 
 import (
 	"fmt"
