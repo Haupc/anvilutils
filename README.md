@@ -1,8 +1,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/Haupc/anvilutils.svg)](https://pkg.go.dev/github.com/Haupc/anvilutils)
 [![Go Report Card](https://goreportcard.com/badge/github.com/haupc/anvilutils)](https://goreportcard.com/report/github.com/haupc/anvilutils)
 [![Go Coverage Badge](https://raw.githubusercontent.com/Haupc/anvilutils/badges/.badges/master/coverage.svg)](https://raw.githubusercontent.com/Haupc/anvilutils/badges/.badges/master/coverage.svg)
-# foundry utils
-foundry utils is a library that provides cheating functionality executed in anvil foundry for interacting with account, transaction especially erc20 and erc721 token
+# anvil utils
+anvil utils is a library that provides cheating functionality executed in anvil foundry for interacting with account, transaction especially erc20 and erc721 token
 
 ## installation
 
