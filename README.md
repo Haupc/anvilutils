@@ -13,7 +13,8 @@
 - [x] Stop impersonate an address
 - [x] Impersonate a txn(require impersonate account)
 - [x] Impersonate and make only 1 txn
-- [ ] Write Erc721 balance
+- [x] Take Erc721 token from another account
+- [ ] Approve Erc721 token
 
 ## How to Use:
 ```go
