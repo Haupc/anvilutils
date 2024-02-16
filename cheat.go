@@ -29,7 +29,7 @@ func (c *Cheat) WriteErc20Balance(contract, user common.Address, amount *big.Int
 		return err
 	}
 	accountBalanceSlotIdx := storage.Erc20AccountBalanceSlotIdx(c.client, balanceOfSlotIdx, user)
-	return storage.SetStorageAt(c.client, contract, accountBalanceSlotIdx, common.BytesToHash(amount.Bytes()))
+	return c.SetStorageAt(contract, accountBalanceSlotIdx, common.BytesToHash(amount.Bytes()))
 }
 
 // write native balance for an account
@@ -40,6 +40,11 @@ func (c *Cheat) WriteNativeBalance(user common.Address, amount *big.Int) error {
 // set code for an address
 func (c *Cheat) SetCode(account common.Address, code []byte) error {
 	return c.client.RpcClient.Call(nil, "anvil_setCode", account.Hex(), hexutil.Encode(code))
+}
+
+// set storge for an contract
+func (c *Cheat) SetStorageAt(contractAddress common.Address, slotIdx, data common.Hash) error {
+	return storage.SetStorageAt(c.client, contractAddress, slotIdx, data)
 }
 
 // after this call, all transactions from specified account
