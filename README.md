@@ -2,6 +2,22 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/haupc/foundryutils)](https://goreportcard.com/report/github.com/haupc/foundryutils)
 [![Go Coverage Badge](https://raw.githubusercontent.com/Haupc/foundryutils/badges/.badges/master/coverage.svg)](https://raw.githubusercontent.com/Haupc/foundryutils/badges/.badges/master/coverage.svg)
 # foundry utils
+foundry utils is a library that provides cheating functionality executed in anvil foundry for interacting with account, transaction especially erc20 and erc721 token
+
+## installation
+
+To use this library, you need to install anvil foundry first. ([see this link](https://book.getfoundry.sh/getting-started/installation))
+
+TL;DR:
+```bash
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+
+Import:
+```go
+import github.com/haupc/foundryutils
+```
 
 ## cheat code:
 
@@ -14,9 +30,11 @@
 - [x] Impersonate a txn(require impersonate account)
 - [x] Impersonate and make only 1 txn
 - [x] Take Erc721 token from another account
-- [ ] Approve Erc721 token
+- [ ] Set approve Erc721 token
 
 ## How to Use:
+
+You can run anvil separately or use forkCmd to run an anvil chain.
 ```go
     // if you want to fork on test code, you can use fork command
     // otherwise, you can run anvil separately then call setup cheats
