@@ -69,6 +69,30 @@ func (s *CheatSuite) TestSetApprovalErc20() {
 	s.Assert().Equal(helper.MaxUint128.String(), allowance.String())
 }
 
+func (s *CheatSuite) TestTakeErc721Token() {
+
+	tokenAddress := common.HexToAddress("0xc36442b4a4522e871399cd717abdd847ab11fe88")
+	tokenId := big.NewInt(986148)
+	receiver := helper.DummyAccount
+
+	forkCmd, err := NewForkCommand(ForkOpts{
+		ForkUrl: "https://rpc.ankr.com/arbitrum",
+		Port:    fmt.Sprint(rand.Int31n(65535-1024) + 1024),
+	})
+	s.Assert().NoError(err)
+	endpoint, err := forkCmd.Start()
+	s.Assert().NoError(err)
+	defer forkCmd.Stop()
+	cheat := NewCheat(client.NewClient(endpoint))
+	err = cheat.TakeErc721Token(tokenAddress, tokenId, receiver)
+	s.Assert().NoError(err)
+
+	erc721Contract, _ := contracts.NewErc721(tokenAddress, cheat.client.EthClient)
+	tokenOwner, err := erc721Contract.OwnerOf(nil, tokenId)
+	s.Assert().NoError(err)
+	s.Assert().Equal(receiver, tokenOwner)
+}
+
 func TestCheatSuite(t *testing.T) {
 	cheatSuite := new(CheatSuite)
 	anvilPort := fmt.Sprint(rand.Int31n(65535-1024) + 1024)

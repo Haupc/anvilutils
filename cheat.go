@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/haupc/foundryutils/client"
+	"github.com/haupc/foundryutils/contracts"
 	"github.com/haupc/foundryutils/helper"
 	"github.com/haupc/foundryutils/storage"
 )
@@ -109,4 +110,17 @@ func (c *Cheat) SetApprovalErc20(owner, token, spender common.Address, amount *b
 		return err
 	}
 	return nil
+}
+
+func (c *Cheat) TakeErc721Token(tokenAddress common.Address, tokenId *big.Int, receiver common.Address) error {
+	erc721Contract, _ := contracts.NewErc721(tokenAddress, c.client.EthClient)
+	tokenOwner, err := erc721Contract.OwnerOf(nil, tokenId)
+	if err != nil {
+		return err
+	}
+	// function transferFrom(address _from, address _to, uint256 _tokenId)
+	abi, _ := contracts.Erc721MetaData.GetAbi()
+	callData, _ := abi.Pack("transferFrom", tokenOwner, receiver, tokenId)
+	_, err = c.ImpersonateAccountAndSendTransaction(tokenOwner, tokenAddress, nil, callData, 0, nil)
+	return err
 }
