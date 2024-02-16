@@ -10,9 +10,9 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient/gethclient"
-	"github.com/haupc/foundryutils/client"
-	"github.com/haupc/foundryutils/hash"
-	"github.com/haupc/foundryutils/helper"
+	"github.com/haupc/anvilutils/client"
+	"github.com/haupc/anvilutils/hash"
+	"github.com/haupc/anvilutils/helper"
 )
 
 // Get slot for account balance

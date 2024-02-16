@@ -1,4 +1,4 @@
-package foundryutils
+package anvilutils
 
 import (
 	"context"
@@ -8,10 +8,10 @@ import (
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/haupc/foundryutils/client"
-	"github.com/haupc/foundryutils/contracts"
-	"github.com/haupc/foundryutils/helper"
-	"github.com/haupc/foundryutils/storage"
+	"github.com/haupc/anvilutils/client"
+	"github.com/haupc/anvilutils/contracts"
+	"github.com/haupc/anvilutils/helper"
+	"github.com/haupc/anvilutils/storage"
 )
 
 type Cheat struct {

@@ -4,7 +4,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/haupc/foundryutils/contracts"
+	"github.com/haupc/anvilutils/contracts"
 )
 
 // pack data for balanceOf method

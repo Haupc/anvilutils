@@ -1,6 +1,6 @@
-[![Go Reference](https://pkg.go.dev/badge/github.com/Haupc/foundryutils.svg)](https://pkg.go.dev/github.com/Haupc/foundryutils)
-[![Go Report Card](https://goreportcard.com/badge/github.com/haupc/foundryutils)](https://goreportcard.com/report/github.com/haupc/foundryutils)
-[![Go Coverage Badge](https://raw.githubusercontent.com/Haupc/foundryutils/badges/.badges/master/coverage.svg)](https://raw.githubusercontent.com/Haupc/foundryutils/badges/.badges/master/coverage.svg)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Haupc/anvilutils.svg)](https://pkg.go.dev/github.com/Haupc/anvilutils)
+[![Go Report Card](https://goreportcard.com/badge/github.com/haupc/anvilutils)](https://goreportcard.com/report/github.com/haupc/anvilutils)
+[![Go Coverage Badge](https://raw.githubusercontent.com/Haupc/anvilutils/badges/.badges/master/coverage.svg)](https://raw.githubusercontent.com/Haupc/anvilutils/badges/.badges/master/coverage.svg)
 # foundry utils
 foundry utils is a library that provides cheating functionality executed in anvil foundry for interacting with account, transaction especially erc20 and erc721 token
 
@@ -16,7 +16,7 @@ foundryup
 
 Import:
 ```go
-import github.com/haupc/foundryutils
+import github.com/haupc/anvilutils
 ```
 
 ## cheat code:
@@ -38,7 +38,7 @@ You can run anvil separately or use forkCmd to run an anvil chain.
 ```go
     // if you want to fork on test code, you can use fork command
     // otherwise, you can run anvil separately then call setup cheats
-    forkCmd, err := foundryutils.NewForkCommand(ForkOpts{})
+    forkCmd, err := anvilutils.NewForkCommand(ForkOpts{})
     if err != nil {
         // do something with err
     }
@@ -49,7 +49,7 @@ You can run anvil separately or use forkCmd to run an anvil chain.
 
     // setup client for anvil node
     client := client.NewClient(forkUrl)
-    cheat := foundryutils.NewCheat(client)
+    cheat := anvilutils.NewCheat(client)
     cheat.WriteErc20Balance(helper.DummyContract, helper.DummyAccount, big.NewInt(1234567890123))
     
     // call api, do everything for testing

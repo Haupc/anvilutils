@@ -10,8 +10,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/haupc/foundryutils/client"
-	"github.com/haupc/foundryutils/helper"
+	"github.com/haupc/anvilutils/client"
+	"github.com/haupc/anvilutils/helper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
